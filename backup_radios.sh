@@ -21,6 +21,8 @@ online="${DIR}/Radios_online.txt"
 offline="${DIR}/Radios_offline.txt"
 qtdOn=$(cat $online | wc -l)
 qtdOff=$(cat $offline | wc -l)
+vaziosBkp=$(find $DIR_OUTPUT/$DATA  -type f -empty | cut -d "-" -f8)
+vaziosQtd=$(find $DIR_OUTPUT/$DATA -type f -empty| cut -d "-" -f6 | wc -l)
 mkdir -p $DIR_OUTPUT/$DATA
 #limpar Arqvuivos
 > $online
@@ -61,8 +63,14 @@ done
 echo "#====================== RELATORIO DO BACKUP ======================#" > ${DIR_OUTPUT}/$DATA/RELATORIO.txt
 echo "QUANTIDADE DE RADIOS ONLINE : $qtdOn" >> ${DIR_OUTPUT}/$DATA/RELATORIO.txt
 echo "QUANTIDADE DE RADIOS OFFLINE : $qtdOff " >> ${DIR_OUTPUT}/$DATA/RELATORIO.txt
+echo "QUANTIDADE DE RADIOS BACKUP VAZIO : $vaziosQtd " >> ${DIR_OUTPUT}/$DATA/RELATORIO.txt
 echo "LISTA DE RADIOS ONLINE :" >> ${DIR_OUTPUT}/$DATA/RELATORIO.txt
 cat $online >> ${DIR_OUTPUT}/$DATA/RELATORIO.txt
 echo "LISTA DE RADIOS OFFLINE :" >> ${DIR_OUTPUT}/$DATA/RELATORIO.txt
 cat $offline >> ${DIR_OUTPUT}/$DATA/RELATORIO.txt
+echo "LISTA DE RADIOS BACKUP VAZIOS :" >> ${DIR_OUTPUT}/$DATA/RELATORIO.txt
+echo $vaziosBkp >> ${DIR_OUTPUT}/$DATA/RELATORIO.txt
 echo "#====================== FIM RELATORIO DO BACKUP ======================#" >> ${DIR_OUTPUT}/$DATA/RELATORIO.txt
+
+#============== REMOVE OS VAZIOS ===========#
+find $DIR_OUTPUT/$DATA -type f -empty | xargs rm

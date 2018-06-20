@@ -10,9 +10,11 @@
 #=======================================================================#
 #========================= CONFIGURACAO GLOBAL =========================#
 hoje=$(date +"%d_%m_%Y")
+DATA=`date +%d-%m-%Y`
 pass_find=0
 user_find=0
 DIR="/tmp"
+
 DIR_OUTPUT="/ARQUIVOS/RADIOS"
 
 #=======================================================================#
@@ -26,6 +28,13 @@ for i in $(cat ${DIR}/radios.txt); do
                                         pass_find=1;
                                         user_find=1;
                                         echo -ne "$i,$usuario,$senha,22\r\n" >> senha.txt
+                                        sshpass -p "$senha" ssh  $i -l "$usuario" \ -oStrictHostKeyChecking=no -oCheckHostIP=no \ -oConnectTimeout=10  \
+                                        "cat /tmp/system.cfg" < /dev/null | tee "${DIR_OUTPUT}/$DATA/backup-radio-$DATA-${device}-porta-22.cfg" > /dev/null
+                                        # StrictHostKeyChecking=no => ignora checagem de chaves
+                                        # CheckHostIP              => ignora checagem de host/ip
+                                        # ConnectTimeout           => tempo limite de espera para conectar
+                                        echo "FINALIZADO O $device as `date +%d-%m-%Y-%H:%M:%S`"  >> /var/log/backup_radios-$DATA.log
+
 
                                         break 2; #finish loop user
                                 else
@@ -36,3 +45,4 @@ for i in $(cat ${DIR}/radios.txt); do
                 done #end pass
         fi
 done
+find $DIR_OUTPUT/$DATA -type f -empty | xargs rm

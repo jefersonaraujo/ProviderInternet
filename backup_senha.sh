@@ -13,6 +13,8 @@ hoje=$(date +"%d_%m_%Y")
 pass_find=0
 user_find=0
 DIR="/tmp"
+DIR_OUTPUT="/ARQUIVOS/RADIOS"
+
 #=======================================================================#
 for i in $(cat ${DIR}/radios.txt); do
         pass_find=0
@@ -24,7 +26,7 @@ for i in $(cat ${DIR}/radios.txt); do
                                         pass_find=1;
                                         user_find=1;
                                         echo -ne "$i,$usuario,$senha,22\r\n" >> senha.txt
-                                        
+
                                         break 2; #finish loop user
                                 else
                                         echo -ne "Not Found $i \r\n" >> /var/log/find_pass.$hoje.log

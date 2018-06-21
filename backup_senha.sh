@@ -14,8 +14,9 @@ DATA=`date +%d-%m-%Y`
 pass_find=0
 user_find=0
 DIR="/tmp"
-
 DIR_OUTPUT="/ARQUIVOS/RADIOS"
+mkdir -p $DIR_OUTPUT/$DATA
+
 
 #=======================================================================#
 for i in $(cat ${DIR}/radios.txt); do
@@ -24,12 +25,14 @@ for i in $(cat ${DIR}/radios.txt); do
         if [ "$pass_find" -eq 0 ] && [ "$user_find" -eq  0 ]; then
                 for senha in $(cat ${DIR}/pass.txt); do
                         for usuario in $(cat ${DIR}/users.txt); do
-                                if (sshpass -p $senha ssh $i -l $usuario -o StrictHostKeyChecking=no -oCheckHostIP=no \ "exit");        then
+                                if (sshpass -p $senha ssh -p9922 $i -l $usuario -o StrictHostKeyChecking=no -oCheckHostIP=no \ "exit");        then
                                         pass_find=1;
                                         user_find=1;
                                         echo -ne "$i,$usuario,$senha,22\r\n" >> senha.txt
-                                        sshpass -p "$senha" ssh  $i -l "$usuario" \ -oStrictHostKeyChecking=no -oCheckHostIP=no \ -oConnectTimeout=10  \
-                                        "cat /tmp/system.cfg" < /dev/null | tee "${DIR_OUTPUT}/$DATA/backup-radio-$DATA-${device}-porta-22.cfg" > /dev/null
+                                        sshpass -p $senha ssh  $i -l $usuario \
+                                        -o StrictHostKeyChecking=no -oCheckHostIP=no \
+                                        -oConnectTimeout=10  \
+                                        "cat /tmp/system.cfg" < /dev/null | tee "${DIR_OUTPUT}/$DATA/backup-radio-$DATA-${i}-porta-9922.cfg" > /dev/null
                                         # StrictHostKeyChecking=no => ignora checagem de chaves
                                         # CheckHostIP              => ignora checagem de host/ip
                                         # ConnectTimeout           => tempo limite de espera para conectar
@@ -45,4 +48,4 @@ for i in $(cat ${DIR}/radios.txt); do
                 done #end pass
         fi
 done
-find $DIR_OUTPUT/$DATA -type f -empty | xargs rm
+#find $DIR_OUTPUT/$DATA -type f -empty | xargs rm

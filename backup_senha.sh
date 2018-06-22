@@ -42,7 +42,7 @@ for i in $(cat ${DIR}/radios.txt); do
                                         break 2; #finish loop user
                                 else
                                         echo -ne "Not Found $i \r\n" >> /var/log/find_pass.$hoje.log
-                                        sleep 2;
+                                      
                                 fi
                         done #end users
                 done #end pass

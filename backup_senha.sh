@@ -37,15 +37,12 @@ for i in $(cat ${DIR}/radios.txt); do
                                         # CheckHostIP              => ignora checagem de host/ip
                                         # ConnectTimeout           => tempo limite de espera para conectar
                                         echo "FINALIZADO O $device as `date +%d-%m-%Y-%H:%M:%S`"  >> /var/log/backup_radios-$DATA.log
-
-
                                         break 2; #finish loop user
                                 else
                                         echo -ne "Not Found $i \r\n" >> /var/log/find_pass.$hoje.log
-                                      
+
                                 fi
                         done #end users
                 done #end pass
         fi
 done
-#find $DIR_OUTPUT/$DATA -type f -empty | xargs rm
